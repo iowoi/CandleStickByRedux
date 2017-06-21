@@ -9,13 +9,13 @@ export default class CandleChart extends React.Component {
     }
 
 
-    render(){
 
-        console.log(this)
+    render(){
+        //console.log(this)
         const config = {
             // chart: {
             //         events: {
-            //         load: t
+            //         load: this.getLiveData
             //     }
             // },
             title: {
@@ -42,7 +42,8 @@ export default class CandleChart extends React.Component {
 
             series: [{
                 type: 'candlestick',
-                data: this.props.data
+                data: this.props.data,
+
             }]
         }
         return(

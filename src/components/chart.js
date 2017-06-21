@@ -2,9 +2,11 @@ import React from 'react';
 import CandleChart from './CandleChart';
 import {
     TextInput,
-    ConfirmButton,
+    ConfirmButton
 } from './common';
 
+
+var Timer ;
 
 export default class ChartBox extends React.Component {
     constructor(props) {
@@ -16,39 +18,32 @@ export default class ChartBox extends React.Component {
     // }
 
 
+    onSearch(){
 
-    currentData(){
-
-        //this.props.onSearch(this.props.currency);
-        let totalSeconds = new Date().getSeconds();
         let elm = this
-        var Timer = setInterval(function () {
-            ++totalSeconds;
-            if(pad(totalSeconds%10) == 0){
-                // do action
-                elm.props.onSearch(elm.props.currency);
-                elm.setState({ result :  elm.props.result})
-                //clearInterval(Timer)
-            }
-        },1000)
-        function pad(val) {
-            var valString = val + "";
-            if(valString.length < 2) {
-                return "0" + valString;
-            }
-            else {
-                return valString;
-            }
-        }
 
+        Timer = setInterval(function Start() {
+            elm.props.onSearch(elm.props.currency);
+            elm.setState({ result : elm.props.result})
+        },1000)
+
+        // elm.props.onSearch(elm.props.currency);
+        // elm.setState({ result : elm.props.result})
+    }
+
+    onStop(){
+        clearInterval (Timer);
     }
 
     render(){
         return (
             <div>
                 <TextInput onChangeCCY={this.props.onChangeCCY}/>
-                <ConfirmButton onSearch={this.currentData.bind(this)}/>
-                <CandleChart data={this.props.result} />
+                <ConfirmButton onClick={this.onSearch.bind(this)} label="start"/>
+                <span>     </span>
+                <ConfirmButton onClick={this.onStop.bind(this)} label="stop" />
+                <CandleChart data={this.props.result}/>
+
             </div>
 
         );

@@ -8,11 +8,4 @@ export const chartState = Immutable.fromJS({
         "min" : null,
         "sec" : null
     }
-    // ,
-    // result: [
-    //     [ts]: {
-    //         "open": 123,
-    //         "close": 345
-    //     }
-    // ]
 });

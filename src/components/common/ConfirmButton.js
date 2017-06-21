@@ -9,9 +9,7 @@ export default class ConfirmButton extends React.Component {
 
     render()    {
         return(
-            <div>
-                <RaisedButton onClick={this.props.onSearch} backgroundColor={lightBlue500} labelColor={white} label="Send"/>
-            </div>
+                <RaisedButton onClick={this.props.onClick} backgroundColor={lightBlue500} labelColor={white} label={this.props.label}/>
         );
     }
 }

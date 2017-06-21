@@ -19,9 +19,9 @@ export const changeCCY = createAction('CHANGE_CURRENCY');
 
 // ConfirmBtn OnClick do dataFetch()
 
-let totalData = [];
-let sellPoints = [];
-
+let totalData = [],
+    sortSellPoints = [],
+    allSellPoints = []
 
 
 export function dataFetch() {
@@ -51,19 +51,52 @@ export function dataFetch() {
             })
             .then((result) => {
                 // create current data
+                let d = new Date(),
+                    m = d.getMinutes(),
+                    s = d.getSeconds()
 
-                // TODO: collect every Second
+                let newData = {
+                   currentTime: parseInt(new Date().setMilliseconds(0)),
+                    min : {
+                        timestamp : m
+                    },
+                    sec : {
+                        timestamp : s
+                    }
+                }
 
-                // TODO: Collect every minute to get the high point and low point
-                var newData = [
-                    parseInt(new Date().setMilliseconds(0)), // InsertTime
-                    parseFloat(result.buy), //Bid
-                    parseFloat(result.sell), //Ask
-                    parseFloat(111.209), //High
-                    parseFloat(101.209)  //Low
-                ]
-                totalData.push(newData)
-                // getDataOnEveryMinute(result)
+                // get sell points's high point & low point
+                allSellPoints.push(parseFloat(result.sell));
+                sortSellPoints.push(parseFloat(result.sell));
+                sortSellPoints = sortSellPoints.sort();
+
+                let open = allSellPoints[0],
+                    close = allSellPoints[allSellPoints.length-1],
+                    low = sortSellPoints[0],
+                    high = sortSellPoints[sortSellPoints.length-1]
+
+                // everySecond
+                newData.sec.open = open
+                newData.sec.high = high
+                newData.sec.low = low
+                newData.sec.close = close
+
+                console.log('second: '+s)
+
+                if(s === 0){
+                    totalData.push([
+                        newData.currentTime,
+                        newData.sec.open,
+                        newData.sec.high,
+                        newData.sec.low,
+                        newData.sec.close
+                    ])
+                    allSellPoints = [];
+                    sortSellPoints = [];
+
+
+                }
+
                 dispatch(dataLoaded(totalData));
 
             })
@@ -76,39 +109,17 @@ export function dataFetch() {
 }
 
 
-function getDataOnEveryMinute(result){
-    var newData = [
-        parseInt(new Date().setMilliseconds(0)), // InsertTime
-        parseFloat(result.buy), //Bid
-        parseFloat(result.sell) //Ask
-    ]
-  //  totalData.push(newData)
-
-    sellPoints.push(newData[2])
-    sellPoints.sort();
-    let high = sellPoints[0],
-        low = sellPoints[sellPoints.length-1]
-    newData.push(high,low)
-
-    console.log('All:',newData)
-
-    //
-
-    // get Low point
-    // for(let i = 0; i < totalData.length; i++){
-    //     console.log("totalData",totalData[2])
-    //     // for (let j = 0; j < totalData[i].length; j++) {
-    //     //     sellPoints.push(totalData[i][2])
-    //     // }
-    // }
-    // sellPoints.sort();
-
-  //  console.log('All:',sellPoints)
-    // console.log('Low:',sellPoints[0])
-    // console.log('High:',sellPoints[0])
-    //
-    // console.log("totalData>>>>",totalData)
-
-        // return totalData.push(newData)
-
-}
+// function DateTimezone(offset) {
+//
+//     // 建立現在時間的物件
+//     let d = new Date()
+//
+//     // 取得 UTC time
+//     let utc = d.setMilliseconds(0) + (d.getTimezoneOffset() * 60000);
+//
+//     // 新增不同時區的日期資料
+//     return utc + (3600000*offset);
+//     //return new Date(utc + (3600000*offset));
+//
+//
+// }
